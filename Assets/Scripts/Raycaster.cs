@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Raycaster : MonoBehaviour
 {
     public TextMesh textDebug;
     public GameObject crosshair;
-    float counter=2;
+    float counter = 2;
     public FPSWalk fpswalk;
 
     // Start is called before the first frame update
@@ -29,32 +27,46 @@ public class Raycaster : MonoBehaviour
             crosshair.transform.position = hit.point;
             crosshair.transform.forward = hit.normal;
 
-            if (hit.transform.gameObject.CompareTag("Player"))
-            {
-                crosshair.GetComponent<Image>().CrossFadeColor(Color.green, .5f, false, false);
-                counter -= Time.deltaTime;
-                if (counter < 0)
-                {
-                    hit.transform.gameObject.SendMessage("ButtonAction");
-
-                }
-            }
-            else if(hit.transform.gameObject.CompareTag("Walkable"))
-            {
-                crosshair.GetComponent<Image>().CrossFadeColor(Color.blue, .5f, false, false);
-                counter -= Time.deltaTime;
-                if (counter < 0)
-                {
-                    fpswalk.positionToGo = hit.transform.position;
-                }
-            }
-            else
-            {
-                counter = 3;
-                crosshair.GetComponent<Image>().CrossFadeColor(Color.red, .5f, false, false);
+            switch (hit.transform.gameObject.tag.ToString()){
+                case "Player":
+                    crosshair.GetComponent<Image>().CrossFadeColor(Color.green, .5f, false, false);
+                    counter -= Time.deltaTime;
+                    if (counter < 0){
+                        hit.transform.gameObject.SendMessage("ButtonAction");
+                    }
+                    break;
+                case "Walkable":
+                    crosshair.GetComponent<Image>().CrossFadeColor(Color.blue, .5f, false, false);
+                    counter -= Time.deltaTime;
+                    if (counter < 0){
+                        fpswalk.positionToGo = hit.transform.position;
+                    }
+                    break;
+                case "Door":
+                    crosshair.GetComponent<Image>().CrossFadeColor(Color.blue, .5f, false, false);
+                    counter -= Time.deltaTime;
+                    if (counter < 0){
+                        if (hit.transform.gameObject.GetComponent<Door>().isOpened) {
+                            hit.transform.gameObject.GetComponent<Door>().doorClosing.Play();
+                        }else{
+                            hit.transform.gameObject.GetComponent<Door>().doorOpening.Play();
+                        }
+                        hit.transform.gameObject.GetComponent<Door>().activeScript = true;
+                    }
+                    break;
+                case "ShadowCoronaTrigger":
+                    try{
+                        hit.transform.gameObject.GetComponent<ShadowCoronaCaller>().callShadowCorona = true;
+                    }catch
+                    {
+                        Debug.Log("Erro");
+                    }
+                    break;
+                default:
+                    counter = 3;
+                    crosshair.GetComponent<Image>().CrossFadeColor(Color.red, .5f, false, false);
+                    break;
             }
         }
-
-       
     }
 }
