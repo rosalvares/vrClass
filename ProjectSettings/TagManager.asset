@@ -5,8 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Walkable
-  - Door
-  - ShadowCoronaTrigger
+  - Interactable
+  - Key
+  - InteractableMask
+  - Mask
   layers:
   - Default
   - TransparentFX

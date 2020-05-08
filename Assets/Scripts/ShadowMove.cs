@@ -12,12 +12,23 @@ public class ShadowMove : MonoBehaviour
     public AudioSource tosse;
     public AudioSource tosseEspirro;
     public AudioSource espirro;
+    private AudioSource audioToPlay;
 
-    void Update(){
-        if (canMove){
-            StartCoroutine(Anda());
-            Destroy(this, 5f);
+    void Start(){        
+        switch (Random.Range(0, 3)){
+            case 0:
+                audioToPlay = tosse;
+                break;
+            case 1:
+                audioToPlay = tosseEspirro;
+                break;
+            case 2:
+                audioToPlay = espirro;
+                break;
         }
+        audioToPlay.Play();
+        StartCoroutine(Anda());
+        Destroy(this, 5f);        
     }
 
     public IEnumerator Anda()
