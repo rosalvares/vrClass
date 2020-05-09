@@ -78,6 +78,7 @@ public class FPSWalk : MonoBehaviour
 
     public void ChangeDeathSound()
     {
+        warning.Stop();
         warning = warningLong;
     }
 }
